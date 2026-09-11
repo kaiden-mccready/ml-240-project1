@@ -120,7 +120,7 @@ for ratio in train_ratios:
             "Total =", len(test_data),
             "Accuracy =", round(accuracy * 100, 2), "%"
         )
-
+##training data ratio => x-axis, accuracy => y-axis, line=>varying K value
 k_values = [1, 5, 10, 15, 20, 25]
 
 for k in k_values:
@@ -143,4 +143,25 @@ plt.title("KNN Accuracy vs. Training Data")
 plt.legend()
 plt.grid()
 
+plt.show()
+##training data ratio => line, accuracy => y-axis, varying K value=> x-axis
+for ratio in train_ratios:
+
+    accuracies = []
+
+    for k in range(1, 26):
+        accuracies.append(results[ratio][k] * 100)
+
+    plt.plot(
+        range(1, 26),
+        accuracies,
+        marker='o',
+        label=str(int(ratio * 100)) + "% training"
+    )
+
+plt.xlabel("K")
+plt.ylabel("Accuracy (%)")
+plt.title("KNN Accuracy vs. K for Different Training Ratios")
+plt.legend()
+plt.grid()
 plt.show()
