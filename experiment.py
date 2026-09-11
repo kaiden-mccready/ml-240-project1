@@ -92,10 +92,11 @@ def test_accuracy(train_data, test_data, k):
 
     return correct, accuracy
 
+for k in range(1, 76):
+    correct, accuracy = test_accuracy(train_data, test_data, k)
 
-correct, accuracy = test_accuracy(train_data, test_data, 1)
-
-print("K =", 1)
-print("Correct =", correct)
-print("Total =", len(test_data))
-print("Accuracy =", accuracy)
+    print("K =", k)
+    print("Correct =", correct)
+    print("Total =", len(test_data))
+    print("Accuracy =", accuracy)
+    print()
