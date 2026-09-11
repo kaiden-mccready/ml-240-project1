@@ -1,6 +1,7 @@
 import math
 #import string
 import numpy as np
+import matplotlib.pyplot as plt
 
 #data input as [[[values],[lables]],[[values1],[lables1]],...]
 def KNN(data, pointToFind, k):
@@ -67,17 +68,19 @@ for i in range(len(features)):
 
 print(data[0])
 
-np.random.seed(42)
 
-indices = np.random.permutation(len(data))
+def split_data(data, train_ratio):
+    indices = np.random.permutation(len(data))
 
-train_size = int(len(data) * 0.8)
+    train_size = int(len(data) * train_ratio)
 
-train_indices = indices[:train_size]
-test_indices = indices[train_size:]
+    train_indices = indices[:train_size]
+    test_indices = indices[train_size:]
 
-train_data = [data[i] for i in train_indices]
-test_data = [data[i] for i in test_indices]
+    train_data = [data[i] for i in train_indices]
+    test_data = [data[i] for i in test_indices]
+
+    return train_data, test_data
 
 def test_accuracy(train_data, test_data, k):
     correct = 0
@@ -92,11 +95,52 @@ def test_accuracy(train_data, test_data, k):
 
     return correct, accuracy
 
-for k in range(1, 76):
-    correct, accuracy = test_accuracy(train_data, test_data, k)
 
-    print("K =", k)
-    print("Correct =", correct)
-    print("Total =", len(test_data))
-    print("Accuracy =", accuracy)
-    print()
+
+train_ratios = [0.5, 0.6, 0.7, 0.8, 0.9]
+
+results = {}
+
+for ratio in train_ratios:
+
+    train_data, test_data = split_data(data, ratio)
+
+    results[ratio] = {}
+
+    for k in range(1, 26):
+
+        correct, accuracy = test_accuracy(train_data, test_data, k)
+
+        results[ratio][k] = accuracy
+
+        print(
+            "Training ratio =", ratio,
+            "K =", k,
+            "Correct =", correct,
+            "Total =", len(test_data),
+            "Accuracy =", round(accuracy * 100, 2), "%"
+        )
+
+k_values = [1, 5, 10, 15, 20, 25]
+
+for k in k_values:
+
+    accuracies = []
+
+    for ratio in train_ratios:
+        accuracies.append(results[ratio][k] * 100)
+
+    plt.plot(
+        [ratio * 100 for ratio in train_ratios],
+        accuracies,
+        marker='o',
+        label="K = " + str(k)
+    )
+
+plt.xlabel("Training Data (%)")
+plt.ylabel("Accuracy (%)")
+plt.title("KNN Accuracy vs. Training Data")
+plt.legend()
+plt.grid()
+
+plt.show()
