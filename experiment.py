@@ -57,12 +57,45 @@ def KNN(data, pointToFind, k):
 
   return retLabel
 file_path = "iris_example_project/Iris.csv"
-data = np.genfromtxt(file_path, delimiter=',', usecols=(1,2,3,4), skip_header=1)
+features = np.genfromtxt(file_path, delimiter=',', usecols=(1,2,3,4), skip_header=1)
 species = np.genfromtxt(file_path, delimiter=',', usecols=5, dtype = str, skip_header=1)
 print(species)
-test_data= []
+data= []
 
-for i in range(len(data)):
-    test_data.append([data[i], species[i]])
+for i in range(len(features)):
+    data.append([features[i], species[i]])
 
-print(test_data[0])
+print(data[0])
+
+np.random.seed(42)
+
+indices = np.random.permutation(len(data))
+
+train_size = int(len(data) * 0.8)
+
+train_indices = indices[:train_size]
+test_indices = indices[train_size:]
+
+train_data = [data[i] for i in train_indices]
+test_data = [data[i] for i in test_indices]
+
+def test_accuracy(train_data, test_data, k):
+    correct = 0
+
+    for point in test_data:
+        prediction = KNN(train_data, point[0], k)
+
+        if prediction == point[1]:
+            correct += 1
+
+    accuracy = correct / len(test_data)
+
+    return correct, accuracy
+
+
+correct, accuracy = test_accuracy(train_data, test_data, 1)
+
+print("K =", 1)
+print("Correct =", correct)
+print("Total =", len(test_data))
+print("Accuracy =", accuracy)
