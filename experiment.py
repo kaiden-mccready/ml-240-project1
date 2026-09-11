@@ -57,6 +57,12 @@ def KNN(data, pointToFind, k):
 
   return retLabel
 file_path = "iris_example_project/Iris.csv"
-data = np.genfromtxt(file_path, delimiter=',', usecols=(0,1,2,3,4), skip_header=1)
-species = np.genfromtxt(file_path, delimiter=',', usecols=(5), dtype = str, skip_header=1)
+data = np.genfromtxt(file_path, delimiter=',', usecols=(1,2,3,4), skip_header=1)
+species = np.genfromtxt(file_path, delimiter=',', usecols=5, dtype = str, skip_header=1)
 print(species)
+test_data= []
+
+for i in range(len(data)):
+    test_data.append([data[i], species[i]])
+
+print(test_data[0])
